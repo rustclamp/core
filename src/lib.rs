@@ -37,6 +37,28 @@ impl CapabilityId {
     }
 }
 
+/// A stable identifier for a qualifier that distinguishes capability instances.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct QualifierId(&'static str);
+
+impl QualifierId {
+    /// Creates an identifier from a stable, source-defined name.
+    pub const fn new(name: &'static str) -> Self {
+        Self(name)
+    }
+
+    /// Returns the stable qualifier name.
+    pub const fn as_str(self) -> &'static str {
+        self.0
+    }
+}
+
+/// Gives a typed qualifier a stable semantic identity.
+pub trait Qualifier {
+    /// Stable semantic identifier; not a display label.
+    const ID: QualifierId;
+}
+
 /// Associates a capability marker with its value type and stable identity.
 pub trait Capability {
     /// The typed value that satisfies this capability.

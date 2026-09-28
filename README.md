@@ -7,9 +7,10 @@ The **Core component of RustClamp**, the framework in the
 for minimal, domain-neutral contracts shared by framework components.
 
 This is a companion package, not a standalone framework. The first public
-contract is `Clock`, with typed `ModuleId` and `CapabilityId` identities and a
-`ClockCapability` marker for Kernel resolution. Core defines contracts and
-identities; provider selection and resolution behavior belong to Kernel.
+contract is `Clock`, with typed `ModuleId`, `CapabilityId`, and `QualifierId`
+identities plus `ClockCapability` and `Qualifier` markers for Kernel resolution.
+Core defines contracts and identities; provider selection and resolution
+behavior belong to Kernel.
 The package builds alone with Rust 1.96.1 and has no external dependencies.
 Publishing is disabled until licensing, registry ownership and the prototype API
 have been reviewed.
