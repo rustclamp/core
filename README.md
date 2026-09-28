@@ -16,6 +16,8 @@ provide the domain-neutral extension boundary for composition-time declarations;
 each target owns validation and the runtime representation it builds. Core
 defines contracts and identities; provider selection and resolution behavior
 belong to Kernel.
+Core also defines stable `ApplicationId`, `ProcessId`, and `ExecutionId` values
+so application blueprints remain distinct from their runnable projections.
 The package builds alone with Rust 1.96.1 and has no external dependencies.
 Publishing is disabled until licensing, registry ownership and the prototype API
 have been reviewed.

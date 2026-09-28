@@ -5,6 +5,54 @@
 
 use std::time::SystemTime;
 
+/// A stable identifier for an application architecture blueprint.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct ApplicationId(&'static str);
+
+impl ApplicationId {
+    /// Creates an identifier from a stable, source-defined name.
+    pub const fn new(name: &'static str) -> Self {
+        Self(name)
+    }
+
+    /// Returns the stable application name.
+    pub const fn as_str(self) -> &'static str {
+        self.0
+    }
+}
+
+/// A stable identifier for one runnable application projection.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct ProcessId(&'static str);
+
+impl ProcessId {
+    /// Creates an identifier from a stable, source-defined name.
+    pub const fn new(name: &'static str) -> Self {
+        Self(name)
+    }
+
+    /// Returns the stable process name.
+    pub const fn as_str(self) -> &'static str {
+        self.0
+    }
+}
+
+/// A stable identifier for a process execution root.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct ExecutionId(&'static str);
+
+impl ExecutionId {
+    /// Creates an identifier from a stable, source-defined name.
+    pub const fn new(name: &'static str) -> Self {
+        Self(name)
+    }
+
+    /// Returns the stable execution name.
+    pub const fn as_str(self) -> &'static str {
+        self.0
+    }
+}
+
 /// A stable identifier for a declared application module.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct ModuleId(&'static str);
