@@ -2,7 +2,7 @@
 
 # rustclamp-core
 
-The planned **Core component of RustClamp**, the framework in the
+The **Core component of RustClamp**, the framework in the
 [`rustclamp`](https://github.com/rustclamp/rustclamp) repository. Core is intended
 for minimal, domain-neutral contracts shared by framework components.
 
@@ -31,10 +31,11 @@ flowchart TD
 | Runtime-specific requirement | None |
 | Package checks | Format, Clippy, tests, rustdoc |
 
-There is no Core behavior to benchmark yet. Future contracts must be tested
-against facade-free consumers and the direct Rust alternative where useful.
-Composition errors, dependency boundaries, and compiler diagnostics belong in
-the comparison alongside runtime and binary cost.
+Core defines contracts, not runtime behavior. The Clock consumer and resolver
+comparison live in the Kernel repository. Future contracts must be tested against
+facade-free consumers and the direct Rust alternative where useful. Composition
+errors, dependency boundaries, and compiler diagnostics belong in the comparison
+alongside runtime and binary cost.
 
 ```sh
 cargo fmt --all -- --check
