@@ -53,6 +53,38 @@ impl QualifierId {
     }
 }
 
+/// A stable identifier for a composition-time contribution kind.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct ContributionId(&'static str);
+
+impl ContributionId {
+    /// Creates an identifier from a stable, source-defined name.
+    pub const fn new(name: &'static str) -> Self {
+        Self(name)
+    }
+
+    /// Returns the stable contribution name.
+    pub const fn as_str(self) -> &'static str {
+        self.0
+    }
+}
+
+/// A stable identifier for a domain-specific contribution target.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct ContributionTargetId(&'static str);
+
+impl ContributionTargetId {
+    /// Creates an identifier from a stable, source-defined name.
+    pub const fn new(name: &'static str) -> Self {
+        Self(name)
+    }
+
+    /// Returns the stable target name.
+    pub const fn as_str(self) -> &'static str {
+        self.0
+    }
+}
+
 /// Gives a typed qualifier a stable semantic identity.
 pub trait Qualifier {
     /// Stable semantic identifier; not a display label.
@@ -90,6 +122,39 @@ pub trait Requires<C: Capability>: Module {
 pub trait Provides<C: Capability>: Module {
     /// Returns the value satisfying this capability requirement.
     fn provided_value(&self) -> &C::Value;
+}
+
+/// Describes a composition-time declaration consumed by a domain target.
+pub trait Contribution {
+    /// Stable semantic identity; not a display label.
+    const ID: ContributionId;
+
+    /// Whether dropping this declaration without a consumer is an error.
+    const REQUIRED: bool = true;
+}
+
+/// A domain-owned compiler from declarations to a runtime representation.
+///
+/// The target owns validation, conflict rules, ordering, and its empty-input
+/// behavior. Core does not prescribe any of those semantics.
+pub trait ContributionTarget {
+    /// The declaration type accepted by this target.
+    type Contribution: Contribution;
+
+    /// The representation retained for runtime execution.
+    type Runtime;
+
+    /// A structured, target-specific assembly error.
+    type Error;
+
+    /// Stable semantic identity; not a display label.
+    const ID: ContributionTargetId;
+
+    /// Validates, orders, and compiles declarations into the runtime form.
+    fn build(
+        &self,
+        contributions: &[(ModuleId, Self::Contribution)],
+    ) -> Result<Self::Runtime, Self::Error>;
 }
 
 /// A source of wall-clock time required by application behavior.

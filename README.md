@@ -11,8 +11,11 @@ contract is `Clock`, with typed `ModuleId`, `CapabilityId`, and `QualifierId`
 identities plus `ClockCapability` and `Qualifier` markers for Kernel resolution.
 The additive `Module`, `Requires<C>`, and `Provides<C>` traits describe module
 identity, required capabilities, and provided values without imposing
-construction or lifecycle methods. Core defines contracts and identities;
-provider selection and resolution behavior belong to Kernel.
+construction or lifecycle methods. `Contribution` and `ContributionTarget`
+provide the domain-neutral extension boundary for composition-time declarations;
+each target owns validation and the runtime representation it builds. Core
+defines contracts and identities; provider selection and resolution behavior
+belong to Kernel.
 The package builds alone with Rust 1.96.1 and has no external dependencies.
 Publishing is disabled until licensing, registry ownership and the prototype API
 have been reviewed.
@@ -34,6 +37,7 @@ flowchart TD
 | External Rust dependencies | 0 |
 | Public behavioral contracts | 1 (`Clock`) |
 | Additive module contracts | `Module`, `Requires<C>`, `Provides<C>` |
+| Contribution extension contracts | `Contribution`, `ContributionTarget` |
 | Runtime-specific requirement | None |
 | Package checks | Format, Clippy, tests, rustdoc |
 
