@@ -6,10 +6,11 @@ The planned **Core component of RustClamp**, the framework in the
 [`rustclamp`](https://github.com/rustclamp/rustclamp) repository. Core is intended
 for minimal, domain-neutral contracts shared by framework components.
 
-This is a companion package, not a standalone framework. It is currently a Phase 0
-scaffold: there are no public contracts yet. This package builds alone
-with Rust 1.96.1 and has no dependencies. Publishing is disabled until licensing,
-registry ownership and the first prototype API have been reviewed.
+This is a companion package, not a standalone framework. The first public contract
+is `Clock`; capability resolution and other contracts are not implemented yet.
+The package builds alone with Rust 1.96.1 and has no external dependencies.
+Publishing is disabled until licensing, registry ownership and the prototype API
+have been reviewed.
 
 Core is intended to contain only contracts that prove useful across application
 domains. The dependency direction is downward:
@@ -26,7 +27,7 @@ flowchart TD
 | Baseline | Current result |
 | --- | --- |
 | External Rust dependencies | 0 |
-| Public behavioral contracts | 0 |
+| Public behavioral contracts | 1 (`Clock`) |
 | Runtime-specific requirement | None |
 | Package checks | Format, Clippy, tests, rustdoc |
 
