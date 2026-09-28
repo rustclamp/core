@@ -157,6 +157,78 @@ pub trait Module {
     const ID: ModuleId;
 }
 
+/// Identity available to a lifecycle participant without exposing a runtime.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct LifecycleContext {
+    application: ApplicationId,
+    process: ProcessId,
+}
+
+impl LifecycleContext {
+    /// Creates a context for one application's process lifecycle.
+    pub const fn new(application: ApplicationId, process: ProcessId) -> Self {
+        Self {
+            application,
+            process,
+        }
+    }
+
+    /// Returns the application whose lifecycle is being coordinated.
+    pub const fn application(self) -> ApplicationId {
+        self.application
+    }
+
+    /// Returns the process whose lifecycle is being coordinated.
+    pub const fn process(self) -> ProcessId {
+        self.process
+    }
+}
+
+/// Opts a module into resource preparation before its process starts.
+pub trait Initialize: Module {
+    /// An implementation-defined preparation error.
+    type Error;
+
+    /// Prepares resources; this does not mean the module is accepting work.
+    fn initialize(&mut self, context: &LifecycleContext) -> Result<(), Self::Error>;
+}
+
+/// Opts a module into activation after initialization succeeds.
+pub trait Start: Module {
+    /// An implementation-defined activation error.
+    type Error;
+
+    /// Activates the module for its selected process.
+    fn start(&mut self, context: &LifecycleContext) -> Result<(), Self::Error>;
+}
+
+/// Opts a module into the readiness check after activation.
+pub trait Ready: Module {
+    /// An implementation-defined readiness error.
+    type Error;
+
+    /// Confirms this participant is ready; process policy decides global readiness.
+    fn ready(&mut self, context: &LifecycleContext) -> Result<(), Self::Error>;
+}
+
+/// Opts a module into graceful shutdown before it is stopped.
+pub trait Drain: Module {
+    /// An implementation-defined drain error.
+    type Error;
+
+    /// Finishes accepted work after process admission has closed.
+    fn drain(&mut self, context: &LifecycleContext) -> Result<(), Self::Error>;
+}
+
+/// Opts a module into teardown after draining.
+pub trait Stop: Module {
+    /// An implementation-defined teardown error.
+    type Error;
+
+    /// Releases resources or execution mechanisms owned by this participant.
+    fn stop(&mut self, context: &LifecycleContext) -> Result<(), Self::Error>;
+}
+
 /// Declares that a module requires one capability.
 ///
 /// The default leaves provider selection to composition validation. A module

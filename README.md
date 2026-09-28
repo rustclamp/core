@@ -18,6 +18,11 @@ defines contracts and identities; provider selection and resolution behavior
 belong to Kernel.
 Core also defines stable `ApplicationId`, `ProcessId`, and `ExecutionId` values
 so application blueprints remain distinct from their runnable projections.
+The synchronous `LifecycleContext` carries application/process identity, while
+`Initialize`, `Start`, `Ready`, `Drain`, and `Stop` are separate opt-in
+participation traits. A module may implement any subset; `Module` itself still
+has no lifecycle requirement. Core provides no hook registry, dispatcher, or
+runtime, and these contracts do not require Tokio, `Send`, or `async`.
 The package builds alone with Rust 1.96.1 and has no external dependencies.
 Publishing is disabled until licensing, registry ownership and the prototype API
 have been reviewed.
@@ -37,7 +42,7 @@ flowchart TD
 | Baseline | Current result |
 | --- | --- |
 | External Rust dependencies | 0 |
-| Public behavioral contracts | 1 (`Clock`) |
+| Public behavioral contracts | `Clock` plus five opt-in lifecycle phases |
 | Additive module contracts | `Module`, `Requires<C>`, `Provides<C>` |
 | Contribution extension contracts | `Contribution`, `ContributionTarget` |
 | Runtime-specific requirement | None |
