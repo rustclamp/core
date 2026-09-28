@@ -68,6 +68,30 @@ pub trait Capability {
     const ID: CapabilityId;
 }
 
+/// Identifies a module that can participate in additive architecture contracts.
+///
+/// This contract describes module identity only. It does not impose a
+/// constructor, lifecycle, health, or shutdown API.
+pub trait Module {
+    /// Stable semantic identifier; not a display label.
+    const ID: ModuleId;
+}
+
+/// Declares that a module requires one capability.
+///
+/// The default leaves provider selection to composition validation. A module
+/// may name a preferred provider explicitly when its architecture requires it.
+pub trait Requires<C: Capability>: Module {
+    /// Explicit provider identity, or `None` when resolution should be unique.
+    const SELECTED_PROVIDER: Option<ModuleId> = None;
+}
+
+/// Declares and exposes one capability provided by a module.
+pub trait Provides<C: Capability>: Module {
+    /// Returns the value satisfying this capability requirement.
+    fn provided_value(&self) -> &C::Value;
+}
+
 /// A source of wall-clock time required by application behavior.
 ///
 /// Implementations may be production clocks, deterministic test clocks, or

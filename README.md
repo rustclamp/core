@@ -9,8 +9,10 @@ for minimal, domain-neutral contracts shared by framework components.
 This is a companion package, not a standalone framework. The first public
 contract is `Clock`, with typed `ModuleId`, `CapabilityId`, and `QualifierId`
 identities plus `ClockCapability` and `Qualifier` markers for Kernel resolution.
-Core defines contracts and identities; provider selection and resolution
-behavior belong to Kernel.
+The additive `Module`, `Requires<C>`, and `Provides<C>` traits describe module
+identity, required capabilities, and provided values without imposing
+construction or lifecycle methods. Core defines contracts and identities;
+provider selection and resolution behavior belong to Kernel.
 The package builds alone with Rust 1.96.1 and has no external dependencies.
 Publishing is disabled until licensing, registry ownership and the prototype API
 have been reviewed.
@@ -31,6 +33,7 @@ flowchart TD
 | --- | --- |
 | External Rust dependencies | 0 |
 | Public behavioral contracts | 1 (`Clock`) |
+| Additive module contracts | `Module`, `Requires<C>`, `Provides<C>` |
 | Runtime-specific requirement | None |
 | Package checks | Format, Clippy, tests, rustdoc |
 
