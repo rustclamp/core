@@ -2,7 +2,7 @@
 
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use rustclamp_core::Clock;
+use rustclamp_core::{Clock, SystemClock};
 
 struct FixedClock(SystemTime);
 
@@ -38,4 +38,11 @@ fn greeter_accepts_a_deterministic_clock_through_an_ordinary_constructor() {
     let greeter = Greeter::new(clock);
 
     assert_eq!(greeter.greet("Ada"), "Hello, Ada! (unix second 42)");
+}
+
+#[test]
+fn system_clock_reads_the_os_wall_clock() {
+    let before = SystemTime::now();
+    let now = SystemClock.now();
+    assert!(now >= before && now <= SystemTime::now());
 }
