@@ -2,7 +2,7 @@
 
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use rustclamp_core::{Clock, SystemClock};
+use rustclamp_core::{Clock, ManualClock, SystemClock};
 
 struct FixedClock(SystemTime);
 
@@ -45,4 +45,23 @@ fn system_clock_reads_the_os_wall_clock() {
     let before = SystemTime::now();
     let now = SystemClock.now();
     assert!(now >= before && now <= SystemTime::now());
+}
+
+#[test]
+fn manual_clock_moves_only_when_told_and_is_shareable() {
+    let clock = std::sync::Arc::new(ManualClock::new(UNIX_EPOCH));
+    clock.advance(Duration::from_secs(90));
+    let reader = std::sync::Arc::clone(&clock);
+    let seen = std::thread::spawn(move || (reader.as_ref() as &dyn Clock).now())
+        .join()
+        .unwrap();
+    assert_eq!(seen, UNIX_EPOCH + Duration::from_secs(90));
+    clock.set(UNIX_EPOCH + Duration::from_secs(5));
+    assert_eq!(clock.now(), UNIX_EPOCH + Duration::from_secs(5));
+}
+
+#[test]
+fn a_resolved_clock_reference_crosses_threads() {
+    fn assert_shareable<T: Send + Sync + ?Sized>() {}
+    assert_shareable::<dyn Clock>();
 }

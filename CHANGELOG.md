@@ -2,8 +2,14 @@
 
 ## Unreleased
 
+### Changed
+
+- Breaking: `Clock: Send + Sync`, so `&dyn Clock` can move into threads, tasks and
+  scheduled jobs. `Cell`-based clocks switch to `ManualClock` or atomics.
+
 ### Added
 
+- `ManualClock`: a settable, advanceable `Clock` for tests and simulations.
 - `Reference`, a UUIDv7 naming one request, command or action (ADR 0021):
   time-ordered, `created_at()`, and `Reference::range(from, to)` for
   time-window filters. Random bytes are read from the OS 4 KiB at a time.
