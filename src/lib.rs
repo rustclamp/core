@@ -286,7 +286,10 @@ pub trait ContributionTarget {
 /// Implementations may be production clocks, deterministic test clocks, or
 /// adapters around an application-owned time source. The contract does not
 /// prescribe ownership, synchronization, or a runtime.
-pub trait Clock {
+///
+/// Clocks are `Send + Sync`, so a resolved `&dyn Clock` can be shared with
+/// worker threads, spawned tasks and scheduled jobs.
+pub trait Clock: Send + Sync {
     /// Returns the current wall-clock time.
     fn now(&self) -> SystemTime;
 }
@@ -298,6 +301,49 @@ pub struct SystemClock;
 impl Clock for SystemClock {
     fn now(&self) -> SystemTime {
         SystemTime::now()
+    }
+}
+
+/// A clock that only moves when told to: for tests and simulations.
+///
+/// Set and advance it through a shared reference while the code under test
+/// reads it through `&dyn Clock`.
+#[derive(Debug)]
+pub struct ManualClock(std::sync::Mutex<SystemTime>);
+
+impl ManualClock {
+    /// Creates a clock stopped at `now`.
+    pub const fn new(now: SystemTime) -> Self {
+        Self(std::sync::Mutex::new(now))
+    }
+
+    /// Moves the clock to `now` (backwards too).
+    pub fn set(&self, now: SystemTime) {
+        *self.lock() = now;
+    }
+
+    /// Moves the clock forward by `by`.
+    ///
+    /// # Panics
+    ///
+    /// If the result overflows `SystemTime`.
+    pub fn advance(&self, by: std::time::Duration) {
+        let mut now = self.lock();
+        *now = now
+            .checked_add(by)
+            .expect("ManualClock advanced past SystemTime range");
+    }
+
+    fn lock(&self) -> std::sync::MutexGuard<'_, SystemTime> {
+        self.0
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+    }
+}
+
+impl Clock for ManualClock {
+    fn now(&self) -> SystemTime {
+        *self.lock()
     }
 }
 
