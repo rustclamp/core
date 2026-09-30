@@ -1,58 +1,54 @@
-<img src="https://raw.githubusercontent.com/rustclamp/docs.rustclamp.com/main/assets/rustclamp-logo.png" alt="RustClamp logo" width="160">
+<img src="https://docs.rustclamp.com/assets/rustclamp-logo.png" alt="RustClamp logo" width="160">
 
 # rustclamp-core
 
-The **Core component of RustClamp**, the framework in the
-[`rustclamp`](https://github.com/rustclamp/rustclamp) repository. Core is intended
-for minimal, domain-neutral contracts shared by framework components.
+Core component of [RustClamp](https://github.com/rustclamp/rustclamp): minimal,
+domain-neutral contracts shared by the other components. It defines contracts and
+identities; resolution and runtime behavior live in
+[kernel](https://github.com/rustclamp/kernel) and
+[runtime](https://github.com/rustclamp/runtime). Zero external dependencies, no
+Tokio or `async` required. Companion crate, not a standalone framework.
 
-This is a companion package, not a standalone framework. The first public
-contract is `Clock`, with typed `ModuleId`, `CapabilityId`, and `QualifierId`
-identities plus `ClockCapability` and `Qualifier` markers for Kernel resolution.
-The additive `Module`, `Requires<C>`, and `Provides<C>` traits describe module
-identity, required capabilities, and provided values without imposing
-construction or lifecycle methods. `Contribution` and `ContributionTarget`
-provide the domain-neutral extension boundary for composition-time declarations;
-each target owns validation and the runtime representation it builds. Core
-defines contracts and identities; provider selection and resolution behavior
-belong to Kernel.
-Core also defines stable `ApplicationId`, `ProcessId`, and `ExecutionId` values
-so application blueprints remain distinct from their runnable projections.
-The synchronous `LifecycleContext` carries application/process identity, while
-`Initialize`, `Start`, `Ready`, `Drain`, and `Stop` are separate opt-in
-participation traits. A module may implement any subset; `Module` itself still
-has no lifecycle requirement. Core provides no hook registry, dispatcher, or
-runtime, and these contracts do not require Tokio, `Send`, or `async`.
-The package builds alone with Rust 1.96.1 and has no external dependencies.
-Publishing is disabled until licensing, registry ownership and the prototype API
-have been reviewed.
+## Install
 
-Core is intended to contain only contracts that prove useful across application
-domains. The dependency direction is downward:
+Not published to crates.io yet (`publish = false`). Depend on it from git, Rust 1.96.1+:
 
-```mermaid
-flowchart TD
-    App[Application modules] --> Core[Core contracts]
-    Kernel[Kernel composition] --> Core
-    Runtime[Runtime contracts] --> Core
-    Core --> Rust[Rust and ecosystem]
-    Core -. no upward dependency .-> Facade[Facade]
+```toml
+[dependencies]
+rustclamp-core = { git = "https://github.com/rustclamp/core" }
 ```
 
-| Baseline | Current result |
-| --- | --- |
-| External Rust dependencies | 0 |
-| Public behavioral contracts | `Clock` plus five opt-in lifecycle phases |
-| Additive module contracts | `Module`, `Requires<C>`, `Provides<C>` |
-| Contribution extension contracts | `Contribution`, `ContributionTarget` |
-| Runtime-specific requirement | None |
-| Package checks | Format, Clippy, tests, rustdoc |
+## Example
 
-Core defines contracts, not runtime behavior. The Clock consumer and resolver
-comparison live in the Kernel repository. Future contracts must be tested against
-facade-free consumers and the direct Rust alternative where useful. Composition
-errors, dependency boundaries, and compiler diagnostics belong in the comparison
-alongside runtime and binary cost.
+```rust
+use std::time::{Duration, UNIX_EPOCH};
+use rustclamp_core::{Clock, ManualClock};
+
+let clock = ManualClock::new(UNIX_EPOCH);
+clock.advance(Duration::from_secs(60));
+let now = (&clock as &dyn Clock).now(); // deterministic time for tests
+```
+
+## Main API
+
+- **Time:** `Clock` (`Send + Sync`, so `&dyn Clock` moves into threads and tasks),
+  `SystemClock`, `ManualClock` (`set`, `advance`), `ClockCapability`.
+- **Identity:** `Reference` (UUIDv7 naming a request, command or action;
+  `created_at`, `Reference::range`), `ModuleId`, `CapabilityId`, `QualifierId`,
+  `ApplicationId`, `ProcessId`, `ExecutionId`, `ContributionId`, `ContributionTargetId`.
+- **Modules:** `Module`, `Requires<C>`, `Provides<C>`, `Capability`, `Qualifier`.
+- **Contributions:** `Contribution`, `ContributionTarget`; each target owns
+  validation and the runtime representation it builds.
+- **Lifecycle:** `LifecycleContext` plus opt-in `Initialize`, `Start`, `Ready`,
+  `Drain`, `Stop`; a module implements any subset.
+
+Feature flags: none. See [CHANGELOG.md](CHANGELOG.md).
+
+## Documentation
+
+<https://docs.rustclamp.com>
+
+## Development
 
 ```sh
 cargo fmt --all -- --check
@@ -61,10 +57,8 @@ cargo test --offline --locked --all-features
 RUSTDOCFLAGS="-D warnings" cargo doc --offline --locked --no-deps --all-features
 ```
 
-For coordinated checkout, architecture checks, measurements, and release policy,
-see the [facade contributor guide](https://github.com/rustclamp/rustclamp/blob/main/CONTRIBUTING.md).
-The configured remote is `https://github.com/rustclamp/core.git`; repository existence
-and public visibility were verified during Phase 0.
+Coordinated checkout, architecture checks and release policy: see the
+[facade contributor guide](https://github.com/rustclamp/rustclamp/blob/main/CONTRIBUTING.md).
 
 ## License
 
