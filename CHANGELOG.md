@@ -4,6 +4,9 @@
 
 ### Added
 
+- `Reference`, a UUIDv7 naming one request, command or action (ADR 0021):
+  time-ordered, `created_at()`, and `Reference::range(from, to)` for
+  time-window filters. Random bytes are read from the OS 4 KiB at a time.
 - `SystemClock`, the OS wall clock as a `Clock` implementation.
 - The initial `Clock` capability contract for system and deterministic time sources.
 - Additive module identity, capability requirement, and capability provision contracts.

@@ -5,6 +5,10 @@
 
 use std::time::SystemTime;
 
+mod reference;
+
+pub use reference::{ParseReferenceError, Reference};
+
 /// A stable identifier for an application architecture blueprint.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct ApplicationId(&'static str);
