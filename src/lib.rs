@@ -287,6 +287,16 @@ pub trait Clock {
     fn now(&self) -> SystemTime;
 }
 
+/// The operating system's wall clock ([`SystemTime::now`]).
+#[derive(Clone, Copy, Debug, Default)]
+pub struct SystemClock;
+
+impl Clock for SystemClock {
+    fn now(&self) -> SystemTime {
+        SystemTime::now()
+    }
+}
+
 /// Marker type that identifies the [`Clock`] capability to the Kernel.
 pub struct ClockCapability;
 

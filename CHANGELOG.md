@@ -4,6 +4,7 @@
 
 ### Added
 
+- `SystemClock`, the OS wall clock as a `Clock` implementation.
 - The initial `Clock` capability contract for system and deterministic time sources.
 - Additive module identity, capability requirement, and capability provision contracts.
 - Stable contribution/target identities and a domain-owned target extension contract.
