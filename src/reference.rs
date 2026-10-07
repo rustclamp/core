@@ -32,7 +32,7 @@ impl Reference {
     /// A new reference. References made by this process are strictly
     /// increasing, even within one millisecond or across a clock step back:
     /// the 12 bits after the time count up within a millisecond (RFC 9562,
-    /// section 6.2, method 3), and the last 62 bits are random. Past 4096
+    /// section 6.2, method 1), and the last 62 bits are random. Past 4096
     /// references in one millisecond the time runs ahead of the clock until
     /// the clock catches up, so ordering holds at any rate.
     ///
