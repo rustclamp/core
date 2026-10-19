@@ -12,6 +12,9 @@
 
 - `Reference::new` uses `AtomicU64::try_update`: `fetch_update` is deprecated
   on current stable, so every dependent crate warned (and `-D warnings` failed).
+- Ahead of 1.0: `ParseReferenceError` is `#[non_exhaustive]`, so a reason can be
+  added later without a breaking change (it can no longer be built outside core);
+  `ClockCapability` derives `Clone`, `Copy`, `Debug` and `Default`.
 - Ready for crates.io: `publish = false` is gone and the manifest carries
   homepage, documentation, keywords and categories. Nothing is uploaded until
   rustclamp's `tools/publish.py --execute` runs.

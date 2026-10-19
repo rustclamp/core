@@ -145,8 +145,10 @@ impl FromStr for Reference {
     }
 }
 
-/// The text is not a hyphenated UUID of version 7.
+/// The text is not a hyphenated UUID of version 7. Non-exhaustive, so a
+/// reason can be added without a breaking change.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct ParseReferenceError;
 
 impl fmt::Display for ParseReferenceError {

@@ -348,6 +348,7 @@ impl Clock for ManualClock {
 }
 
 /// Marker type that identifies the [`Clock`] capability to the Kernel.
+#[derive(Clone, Copy, Debug, Default)]
 pub struct ClockCapability;
 
 impl Capability for ClockCapability {
