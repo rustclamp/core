@@ -43,7 +43,7 @@ impl Reference {
         // Time, version and counter: one atomic, so threads never wait on a lock.
         let fresh = (millis(SystemTime::now()) << 16) | 0x7000;
         let next = |last: u64| if fresh > last { fresh } else { increment(last) };
-        let high = match LAST.fetch_update(Ordering::Relaxed, Ordering::Relaxed, |last| {
+        let high = match LAST.try_update(Ordering::Relaxed, Ordering::Relaxed, |last| {
             Some(next(last))
         }) {
             Ok(last) | Err(last) => next(last),
