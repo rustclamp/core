@@ -38,7 +38,8 @@ impl Reference {
     ///
     /// # Panics
     ///
-    /// Where `/dev/urandom` is missing (Windows): a guessable ID is worse than none.
+    /// When the operating system's random source fails (`/dev/urandom` on
+    /// Unix, `BCryptGenRandom` on Windows): a guessable ID is worse than none.
     pub fn new() -> Self {
         // Time, version and counter: one atomic, so threads never wait on a lock.
         let fresh = (millis(SystemTime::now()) << 16) | 0x7000;
@@ -196,12 +197,9 @@ thread_local! {
 }
 
 impl Random {
-    // ponytail: std-only, Unix only; `getrandom` for Windows
     fn take(&mut self) -> u64 {
         if self.used == self.pool.len() {
-            std::fs::File::open("/dev/urandom")
-                .and_then(|mut source| std::io::Read::read_exact(&mut source, &mut self.pool))
-                .expect("references need the operating system random source /dev/urandom");
+            fill(&mut self.pool);
             self.used = 0;
         }
         let mut bytes = [0; 8];
@@ -209,6 +207,20 @@ impl Random {
         self.used += 8;
         u64::from_be_bytes(bytes)
     }
+}
+
+/// Fills `pool` from the operating system: std alone on Unix; Windows has no
+/// file to read, so it goes through `getrandom` (its only dependency).
+#[cfg(not(windows))]
+fn fill(pool: &mut [u8]) {
+    std::fs::File::open("/dev/urandom")
+        .and_then(|mut source| std::io::Read::read_exact(&mut source, pool))
+        .expect("references need the operating system random source /dev/urandom");
+}
+
+#[cfg(windows)]
+fn fill(pool: &mut [u8]) {
+    getrandom::fill(pool).expect("references need the operating system random source");
 }
 
 #[cfg(test)]

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- `Reference::new` works on Windows: it reads the OS random source through
+  `getrandom` there, a Windows-only dependency. Unix still reads
+  `/dev/urandom` and has no dependencies.
+
 ### Changed
 
 - Ready for crates.io: `publish = false` is gone and the manifest carries

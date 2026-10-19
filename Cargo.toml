@@ -12,6 +12,10 @@ keywords = ["framework", "composition", "capabilities", "no-std"]
 categories = ["rust-patterns", "no-std"]
 readme = "README.md"
 
+# Windows has no /dev/urandom; Unix builds stay dependency-free.
+[target.'cfg(windows)'.dependencies]
+getrandom = "0.4.3"
+
 [lints.rust]
 unsafe_code = "forbid"
 missing_docs = "deny"
