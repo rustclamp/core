@@ -4,6 +4,9 @@
 
 ### Changed
 
+- Ready for crates.io: `publish = false` is gone and the manifest carries
+  homepage, documentation, keywords and categories. Nothing is uploaded until
+  rustclamp's `tools/publish.py --execute` runs.
 - Breaking: `Clock: Send + Sync`, so `&dyn Clock` can move into threads, tasks and
   scheduled jobs. `Cell`-based clocks switch to `ManualClock` or atomics.
 
