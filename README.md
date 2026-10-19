@@ -11,11 +11,11 @@ Tokio or `async` required. Companion crate, not a standalone framework.
 
 ## Install
 
-Not on crates.io yet: the name is reserved and 0.1.0 is prepared. Depend on it from git, Rust 1.96.1+:
+Rust 1.96.1+, edition 2024:
 
 ```toml
 [dependencies]
-rustclamp-core = { git = "https://github.com/rustclamp/core" }
+rustclamp-core = "1"
 ```
 
 ## Example
