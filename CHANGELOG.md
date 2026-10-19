@@ -4,6 +4,8 @@
 
 ### Changed
 
+- `Reference::new` uses `AtomicU64::try_update`: `fetch_update` is deprecated
+  on current stable, so every dependent crate warned (and `-D warnings` failed).
 - Ready for crates.io: `publish = false` is gone and the manifest carries
   homepage, documentation, keywords and categories. Nothing is uploaded until
   rustclamp's `tools/publish.py --execute` runs.
