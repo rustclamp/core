@@ -6,7 +6,7 @@ Core component of [RustClamp](https://github.com/rustclamp/rustclamp): minimal,
 domain-neutral contracts shared by the other components. It defines contracts and
 identities; resolution and runtime behavior live in
 [kernel](https://github.com/rustclamp/kernel) and
-[runtime](https://github.com/rustclamp/runtime). Zero external dependencies, no
+[runtime](https://github.com/rustclamp/runtime). No external dependencies on Unix (Windows adds `getrandom` for its random source), no
 Tokio or `async` required. Companion crate, not a standalone framework.
 
 ## Install

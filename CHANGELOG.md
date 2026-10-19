@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- `Reference::new` works on Windows: it reads the OS random source through
+  `getrandom` there, a Windows-only dependency. Unix still reads
+  `/dev/urandom` and has no dependencies.
+
 ### Changed
 
 - `Reference::new` uses `AtomicU64::try_update`: `fetch_update` is deprecated
