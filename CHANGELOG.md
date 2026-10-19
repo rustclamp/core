@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.0.0 - 2026-10-19
+
 ### Fixed
 
 - `Reference::new` works on Windows: it reads the OS random source through
