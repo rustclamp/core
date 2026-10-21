@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed
+
+- MSRV lowered from 1.96.1 to 1.85 (the edition 2024 floor). `Reference::new`
+  is back on `AtomicU64::fetch_update` with the deprecation allowed locally:
+  `try_update` needs a newer Rust than 1.85.
+- CI runs check and test on 1.85 and stable.
+
 ## 1.0.0 - 2026-10-19
 
 ### Fixed

@@ -2,7 +2,7 @@
 name = "rustclamp-core"
 version = "1.0.0"
 edition = "2024"
-rust-version = "1.96.1"
+rust-version = "1.85"
 description = "Minimal shared contracts for Clamp applications."
 repository = "https://github.com/rustclamp/core"
 license = "MIT OR Apache-2.0"
@@ -11,6 +11,7 @@ documentation = "https://docs.rs/rustclamp-core"
 keywords = ["framework", "composition", "capabilities", "no-std"]
 categories = ["rust-patterns", "no-std"]
 readme = "README.md"
+exclude = [".github/", ".gitignore", "rust-toolchain.toml"]
 
 # Windows has no /dev/urandom; Unix builds stay dependency-free.
 [target.'cfg(windows)'.dependencies]

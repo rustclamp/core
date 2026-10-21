@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: test (${{ matrix.rust }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 1.85 must match rust-version in Cargo.toml.
+        rust: ["1.85", stable]
+    env:
+      # Overrides the rust-toolchain.toml pin.
+      RUSTUP_TOOLCHAIN: ${{ matrix.rust }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+      - run: cargo check --all-targets --locked
+      - run: cargo test --all-targets --locked
