@@ -1,6 +1,6 @@
 # Changelog: rustclamp-core
 
-## Unreleased
+## 1.0.1 - 2026-10-21
 
 ### Changed
 
