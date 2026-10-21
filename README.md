@@ -11,7 +11,7 @@ Tokio or `async` required. Companion crate, not a standalone framework.
 
 ## Install
 
-Rust 1.96.1+, edition 2024:
+Rust 1.85+, edition 2024:
 
 ```toml
 [dependencies]
